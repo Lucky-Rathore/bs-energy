@@ -1,0 +1,10 @@
+{
+  "expo": {
+    "name": "bs-energy",
+    "slug": "bs-energy",
+    "version": "1.0.0",
+    "assetBundlePatterns": [
+      "**/*"
+    ]
+  }
+}

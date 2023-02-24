@@ -13,18 +13,19 @@ Parse.serverURL = 'https://parseapi.back4app.com/'
 const LeftContent = props => <Avatar.Icon {...props} icon="folder" />
 
 
-const AadharScreen = ({ route, navigation }) => {
+const SelfieScreen2 = ({ route, navigation }) => {
     const [image, setImage] = useState(null);
     const [imageBack, setImageBack] = useState(null);
 
-    AsyncStorage.getItem('aadharImage').then(i => {
+
+    AsyncStorage.getItem('selfieImage').then(i => {
         if (i) {
             console.log('setting image: ' + 'aadharImage');
             setImage(i);
         }
     });
 
-    AsyncStorage.getItem('aadharImageBack').then(i => {
+    AsyncStorage.getItem('propertyImage').then(i => {
         if (i) {
             console.log('setting image: ' + 'aadharImageBack');
             setImageBack(i);
@@ -57,10 +58,10 @@ const AadharScreen = ({ route, navigation }) => {
                 quality: 1,
             });
             if (!result.cancelled) {
-                await AsyncStorage.setItem(backImage ? 'aadharImageBack' : 'aadharImage', result.uri);
+                await AsyncStorage.setItem(backImage ? 'propertyImage' : 'selfieImage', result.uri);
                 const userId = await AsyncStorage.getItem('objectId')
                 console.log('userId / object id: ' + userId)
-                saveImage(backImage ? 'aadharImageBack' : 'aadharImage', userId, result.uri)
+                saveImage(backImage ? 'propertyImage' : 'selfieImage', userId, result.uri)
                 backImage ? setImageBack(result.uri) : setImage(result.uri)
             }
         }
@@ -72,26 +73,27 @@ const AadharScreen = ({ route, navigation }) => {
     return (
         <View >
             <View style={{ alignSelf: 'center' }} >
-                <Button
+                {/* <Button
                     textColor='#274384'
                     mode='text'
                     style={{ alignSelf: 'flex-start', marginTop: 20, color: 'black' }}
                     labelStyle={{ fontSize: 16, "fontWeight": "bold" }}
                     icon="file-document-outline">
                     Aadhar Image
-                </Button>
-                <View style={{ marginTop: 30, flexDirection: 'row', justifyContent: 'space-around' }} >
+                </Button> */}
+                {/* <View style={{ marginTop: 30, flexDirection: 'row', justifyContent: 'space-around' }} >
                     <Button textColor='#274384' icon="radiobox-blank" mode="text">Aadhar Number</Button>
-                    <Button textColor='#274384' style={{fontWeight: 'bold'}} icon="radiobox-marked" mode="text">Upload Image</Button>
+                    <Button textColor='#274384' style={{ fontWeight: 'bold' }} icon="radiobox-marked" mode="text">Upload Image</Button>
+                </View> */}
+                <View>
+                    <Text style={{
+                        "fontStyle": "normal",
+                        "fontWeight": "400",
+                        "fontSize": 16,
+                        "color": "#6E717C",
+                        marginTop: 10
+                    }}>Slefie *</Text>
                 </View>
-                <Text style={{
-                    "fontStyle": "normal",
-                    "fontWeight": "400",
-                    "fontSize": 16,
-                    // "lineHeight": 24,
-                    "color": "#6E717C",
-                    marginTop: 10
-                }}>Aadhar Card Front *</Text>
                 {image ?
                     (<View style={{ marginTop: 30 }}>
 
@@ -122,13 +124,13 @@ const AadharScreen = ({ route, navigation }) => {
                         </View>
                     </View>)}
 
-                <View style={{ marginTop: 30 }}>
+                <View  >
                     <Text style={{
                         "fontStyle": "normal",
                         "fontWeight": "400",
                         "fontSize": 16,
                         "color": "#6E717C"
-                    }}>Aadhar Card Back *</Text>
+                    }}>Business Site Photo *</Text>
                 </View>
                 {imageBack ?
                     (<View style={{ marginTop: 30 }}>
@@ -166,7 +168,7 @@ const AadharScreen = ({ route, navigation }) => {
 };
 
 
-export default AadharScreen;
+export default SelfieScreen2;
 
 const styles = StyleSheet.create({
     container: {

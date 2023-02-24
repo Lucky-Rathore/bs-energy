@@ -44,10 +44,10 @@ const SelfieScreen = ({ route, navigation }) => {
                 quality: 1,
             });
             if (!result.cancelled) {
-                AsyncStorage.setItem(JSON.stringify(toCapture), result.uri);
                 if (toCapture == selfieKey) setSelfie(result.uri);
                 else setPropertyImage(result.uri)
                 const userId = await AsyncStorage.getItem('objectId')
+                AsyncStorage.setItem(JSON.stringify(toCapture), result.uri);
                 saveImage(userId, result.uri)
             }
         }
@@ -57,14 +57,14 @@ const SelfieScreen = ({ route, navigation }) => {
     if(!selfie) {
         AsyncStorage.getItem(JSON.stringify(selfieKey)).then( i => {
             console.log('getting selfie from async storage: ' + i)
-            setSelfie(i)
+            i ? setSelfie(i) : takePicture();
         }).catch(e => console.error(e));
     }
 
     if(!propertyImage) {
         AsyncStorage.getItem(JSON.stringify(propertyImageKey)).then( i => {
             console.log('getting property images from async storage: ' + i)
-            setPropertyImage(i)                        
+            i ? setPropertyImage(i) : takePicture()                        
         }).catch(e => console.error(e));
         if (!(selfie && propertyImage)) takePicture();
     }

@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { MD3LightTheme as DefaultTheme, Provider as PaperProvider } from 'react-native-paper';
 import { TextInput, Text } from 'react-native-paper';
 import { Button } from 'react-native-paper';
-// import { TextInput, Text } from 'react-native';
 
 import { Alert, StyleSheet } from 'react-native';
 
@@ -11,11 +10,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { View } from 'react-native';
 
 
-//Initializing the SDK
 Parse.setAsyncStorage(AsyncStorage);
-//Paste below the Back4App Application ID AND the JavaScript KEY
 Parse.initialize('uvjIKE4Tr18UMo9AK4CwWKreb3tJZQ21cOl8aVgj', 'bwmjSWPIEWEkNi7qFeJYNJYkAf4HaIjBFyIy5hg1');
-//Point to Back4App Parse API address 
 Parse.serverURL = 'https://parseapi.back4app.com/'
 
 const theme = {
@@ -40,19 +36,6 @@ export default function UserForm({ navigation }) {
   const [pin, setPin] = React.useState("");
   const [bizType, setBizType] = React.useState("");
 
-  // function testFeed() {
-  //   setName('name' + Math.random())
-  //   setBusName('busName' + Math.random())
-  //   setPhone('7769940498')
-  //   setEmail('email@' + Math.random())
-  //   setadd1('add1' + Math.random())
-  //   setadd2('add2' + Math.random())
-  //   setCountryState('KA')
-  //   setPin('560066')
-  //   setBizType('Pvt Ltd')
-  // }
-
-  // testFeed()
 
 
   async function sendOtp() {
@@ -71,22 +54,22 @@ export default function UserForm({ navigation }) {
       redirect: 'follow'
     };
 
-    // fetch("https://verify.twilio.com/v2/Services/VAc1a9097271a22e709588ebc0b9d0e161/Verifications", requestOptions)
-    //   .then(response => response.text())
-    //   .then(result => console.log(result))
-    //   .catch(error => console.log('error', error));
+    fetch("https://verify.twilio.com/v2/Services/VAc1a9097271a22e709588ebc0b9d0e161/Verifications", requestOptions)
+      .then(response => response.text())
+      .then(result => console.log(result))
+      .catch(error => console.log('error', error));
   }
 
   async function validate() {
     let s = ''
-    // if (name.length < 1) s += '\n- Name'
-    // if (busName.length < 1) s += '\n - Business Name'
-    // if (!(parseInt(phone) >= 1000000000 && parseInt(phone) <= 9999999999)) s += '\n - Phone Number'
-    // if (!(email.includes('@') && email.includes('.'))) s += '\n - Email'
-    // if (add1.length < 1) s += '\n - Address Line 1'
-    // if (countryState.length < 1) s += '\n - State'
-    // if (!(parseInt(pin) >= 100000 && parseInt(pin) <= 999999)) s += '\n - Pin'
-    // if (bizType.length < 1) s += '\n - Business Type'
+    if (name.length < 1) s += '\n- Name'
+    if (busName.length < 1) s += '\n - Business Name'
+    if (!(parseInt(phone) >= 1000000000 && parseInt(phone) <= 9999999999)) s += '\n - Phone Number'
+    if (!(email.includes('@') && email.includes('.'))) s += '\n - Email'
+    if (add1.length < 1) s += '\n - Address Line 1'
+    if (countryState.length < 1) s += '\n - State'
+    if (!(parseInt(pin) >= 100000 && parseInt(pin) <= 999999)) s += '\n - Pin'
+    if (bizType.length < 1) s += '\n - Business Type'
     if (s == '') {
       AsyncStorage.setItem('phone', phone)
       sendOtp()
@@ -117,7 +100,7 @@ export default function UserForm({ navigation }) {
     } catch (error) {
       console.error('Error while creating BusinessDetail1: ', error);
     }
-    navigation.navigate("OTPScreen2")
+    navigation.navigate("OTPScreen2", { phoneNumber: phone })
   }
 
 

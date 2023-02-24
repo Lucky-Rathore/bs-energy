@@ -6,12 +6,12 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 const OTPScreen2 = ({ navigation, route }) => {
-    const [checked, setChecked] = React.useState(false)
-    const [isValidOtp, setIsValidOtp] = React.useState(true)
-    const [secondsRemaining, setSecondsRemaining] = useState(60);
-    const [phoneNumber, setPhoneNumber] = useState('')
 
-    AsyncStorage.getItem('phone').then(i => setPhoneNumber(i)).catch(e => console.error(e))
+    const { phoneNumber } = route.params
+
+    const [checked, setChecked] = React.useState(false)
+    const [isValidOtp, setIsValidOtp] = React.useState(false)
+    const [secondsRemaining, setSecondsRemaining] = useState(60);
 
     useEffect(() => {
         if (secondsRemaining > 0) {
@@ -29,7 +29,6 @@ const OTPScreen2 = ({ navigation, route }) => {
         var myHeaders = new Headers();
         myHeaders.append("Authorization", "Basic QUM0ZjM3NmU1MTg1MTE1OTRmZTY5Nzg4MGEyNDc4YWRmZjo5YjExOTU2MDBjMzg0NTk2MDczNjIwMmE4ODU5NjZjOA==");
         myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
-        const phone = await AsyncStorage.getItem('Phone')
         var urlencoded = new URLSearchParams();
         urlencoded.append("To", "+91" + phoneNumber);
         urlencoded.append("Code", otp);
@@ -40,7 +39,7 @@ const OTPScreen2 = ({ navigation, route }) => {
             body: urlencoded,
             redirect: 'follow'
         };
-        console.log('sending otp')
+        console.log('validating otp')
         fetch("https://verify.twilio.com/v2/Services/VAc1a9097271a22e709588ebc0b9d0e161/VerificationCheck", requestOptions)
             .then(response => response.json())
             .then(result => {
@@ -52,6 +51,10 @@ const OTPScreen2 = ({ navigation, route }) => {
                 }
             })
             .catch(error => console.log('error', error));
+        // if (otp === '123456') {
+        //     setIsValidOtp(true)
+        //     console.log('otp equals 123456')
+        // }
     }
 
     const submit = () => {
@@ -73,10 +76,10 @@ const OTPScreen2 = ({ navigation, route }) => {
             redirect: 'follow'
         };
 
-        // fetch("https://verify.twilio.com/v2/Services/VAc1a9097271a22e709588ebc0b9d0e161/Verifications", requestOptions)
-        //   .then(response => response.text())
-        //   .then(result => console.log(result))
-        //   .catch(error => console.log('error', error));
+        fetch("https://verify.twilio.com/v2/Services/VAc1a9097271a22e709588ebc0b9d0e161/Verifications", requestOptions)
+          .then(response => response.text())
+          .then(result => console.log(result))
+          .catch(error => console.log('error', error));
     }
 
     return (
@@ -115,12 +118,22 @@ const OTPScreen2 = ({ navigation, route }) => {
                     />
 
                 </View>
-                <Text style={{
-                    "height": 19,
-                    "fontWeight": "400",
-                    "fontSize": 13,
-                    "color": "#274384"
-                }}>(00:{secondsRemaining})</Text>
+                {
+                    isValidOtp ?
+
+                        <Text style={{
+                            "height": 19,
+                            "fontWeight": "400",
+                            "fontSize": 13,
+                            "color": "#274384"
+                        }}>OTP validated</Text> :
+                        <Text style={{
+                            "height": 19,
+                            "fontWeight": "400",
+                            "fontSize": 13,
+                            "color": "#274384"
+                        }}>(00:{secondsRemaining})</Text>
+                }
 
                 <Text style={{
                     marginTop: 50,
@@ -177,7 +190,7 @@ const OTPScreen2 = ({ navigation, route }) => {
                 </View>) :
                 (null)}
 
-            <Button style={{ margin: 30, backgroundColor: '#00A197' }} mode="contained" onPress={submit} >Submit</Button>
+            <Button disabled={!checked || !isValidOtp} style={{ margin: 30, backgroundColor: '#00A197' }} mode="contained" onPress={submit} >Submit</Button>
 
         </View>
 

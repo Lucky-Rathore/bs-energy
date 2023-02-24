@@ -15,6 +15,7 @@ import ThankScreen from './component/ThankScreen';
 import AadharScreen from './component/AadharScreen';
 import CameraTest from './component/CameraTest';
 import PickerButton from './component/PickerButton';
+import SelfieScreen2 from './component/SelfieScreen2';
 
 const Stack = createNativeStackNavigator();
 
@@ -53,7 +54,7 @@ export default function Main() {
           <Stack.Screen name="ThankScreen" component={ThankScreen} options={{ header: (props) => <AppBar progress={4}/>}}/>
           
           <Stack.Screen name="KycScreen" component={KycScreen}  />
-          <Stack.Screen name="SelfieScreen" component={SelfieScreen} />
+          <Stack.Screen name="SelfieScreen2" component={SelfieScreen2} />
           <Stack.Screen name="OTPScreen2" component={OTPScreen2} />
           <Stack.Screen name="AppBar" component={AppBar} />
           <Stack.Screen name="AadharScreen" component={AadharScreen} />

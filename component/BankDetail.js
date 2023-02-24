@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { Button, Card, Text, IconButton, TextInput } from 'react-native-paper';
 import { StyleSheet } from 'react-native';
 import { View, Image } from 'react-native';
 import * as     ImagePicker from 'expo-image-picker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Parse from 'parse/react-native.js';
-import PickerButton from './PickerButton';
+import { Picker } from '@react-native-picker/picker'
 
 
 Parse.setAsyncStorage(AsyncStorage);
@@ -13,28 +13,32 @@ Parse.initialize('uvjIKE4Tr18UMo9AK4CwWKreb3tJZQ21cOl8aVgj', 'bwmjSWPIEWEkNi7qFe
 Parse.serverURL = 'https://parseapi.back4app.com/'
 
 export default function BankDetail({ navigation }) {
-
+    
     const [beneficiaryName, setbeneficiaryName] = useState(null)
     const [bankName, setbankName] = useState(null)
-    const [bankAccType, setbankAccType] = useState(null)
-    const [bankAccNumber, setbankAccNumber] = useState(null)
-    const [bankAccNumber2, setbankAccNumber2] = useState(null)
+    const [bankAccNumber, setbankAccNumber] = useState('')
+    const [bankAccNumber2, setbankAccNumber2] = useState('')
     const [ifscCode, setifscCode] = useState(null)
-    const [chequeImage, setchequeImage] = useState(null)
+    const [chequeImage, setChequeImage] = useState(null)
+    
+    const banks = ["Select Bank", "Allahabad Bank", "Andhra Bank", "Axis Bank", "Bank of Bahrain and Kuwait", "Bank of Baroda - Corporate Banking", "Bank of Baroda - Retail Banking", "Bank of India", "Bank of Maharashtra", "Canara Bank", "Central Bank of India", "City Union Bank", "Corporation Bank", "Deutsche Bank", "Development Credit Bank", "Dhanlaxmi Bank", "Federal Bank", "ICICI Bank", "IDBI Bank", "Indian Bank", "Indian Overseas Bank", "IndusInd Bank", "ING Vysya Bank", "Jammu and Kashmir Bank", "Karnataka Bank Ltd", "Karur Vysya Bank", "Kotak Bank", "Laxmi Vilas Bank", "Oriental Bank of Commerce", "Punjab National Bank - Corporate Banking", "Punjab National Bank - Retail Banking", "Punjab & Sind Bank", "Shamrao Vitthal Co-operative Bank", "South Indian Bank", "State Bank of Bikaner & Jaipur", "State Bank of Hyderabad", "State Bank of India", "State Bank of Mysore", "State Bank of Patiala", "State Bank of Travancore", "Syndicate Bank", "Tamilnad Mercantile Bank Ltd.", "UCO Bank", "Union Bank of India", "United Bank of India", "Vijaya Bank", "Yes Bank Ltd", "Other"]
+    
+    
 
-    const banks = ['Allahabad Bank', 'Andhra Bank', 'Other']
-
+    const pickerRef = useRef();
+    
     AsyncStorage.getItem('checkImage').then(i => {
-        if (i) { setchequeImage(i); }
+        if (i) { setChequeImage(i); }
     });
 
     const validate = async () => {
         let s = ''
         if (!(beneficiaryName && beneficiaryName.length > 0)) s += '\n- Benificiary Name'
         if (!(bankAccNumber && bankAccNumber.length > 0)) s += '\n- Bank Number'
-        if (!(bankAccNumber2 && bankAccNumber2.length > 0 && bankAccNumber2.equals(bankAccNumber))) alert('bank account numbers are not same.')
+        if (!(bankAccNumber2 && bankAccNumber2.length > 0 && bankAccNumber2 === bankAccNumber)) alert('bank account numbers are not same.')
         if (!(ifscCode && ifscCode.length > 0)) s += '\n- IFSC Code'
         if (!chequeImage) s += '\n- Cheque Image'
+        if (!(bankName && bankName.length > 0)) s += '\n- Bank'
         if (s === '') saveBankDetails()
         else alert('please validate' + s)
 
@@ -47,13 +51,12 @@ export default function BankDetail({ navigation }) {
             const user = await query.get(userId);
             user.set('beneficiaryName', beneficiaryName)
             user.set('bankName', bankName)
-            user.set('bankAccType', bankAccType)
             user.set('bankAccNumber', bankAccNumber)
-            user.set('bankAccNumber2', bankAccNumber2)
             user.set('ifscCode', ifscCode)
             console.log(user)
             try {
                 const response = await user.save();
+                navigation.navigate('ThankScreen');
                 console.log('BusinessDetail1 updated', response);
             } catch (error) {
                 console.error('Error while updating BusinessDetail1', error);
@@ -63,20 +66,21 @@ export default function BankDetail({ navigation }) {
         }
     }
 
-    const saveImage = async (userId) => {
-        // const query = new Parse.Query('BusinessDetail1');
-        // try {
-        //     const user = await query.get(userId);
-        //     user.set('chequeImage', new Parse.File('img.png', { base64: chequeImage }));
-        //     try {
-        //         const response = await user.save();
-        //         console.log('BusinessDetail1 updated', response);
-        //     } catch (error) {
-        //         console.error('Error while updating BusinessDetail1', error);
-        //     }
-        // } catch (error) {
-        //     console.error('Error while retrieving object BusinessDetail1', error);
-        // }
+    const saveImage = async (userId, imageUri) => {
+        const query = new Parse.Query('BusinessDetail1');
+        try {
+            const user = await query.get(userId);
+            console.log('chequeImage', chequeImage)
+            user.set('checkImage', new Parse.File('img.png', { base64: imageUri }));
+            try {
+                const response = await user.save();
+                console.log('BusinessDetail1 updated', response);
+            } catch (error) {
+                console.error('Error while updating BusinessDetail1', error);
+            }
+        } catch (error) {
+            console.error('Error while retrieving object BusinessDetail1', error);
+        }
     }
 
     const pickImage = async () => {
@@ -89,22 +93,31 @@ export default function BankDetail({ navigation }) {
                 quality: 1,
             });
 
-            if (!result.cancelled) {
+            if (!result.canceled) {
                 await AsyncStorage.setItem('checkImage', result.uri);
+                setChequeImage(result.uri);
                 const userId = await AsyncStorage.getItem('objectId')
                 console.log('userId / object id: ' + userId)
-                setchequeImage(result.uri);
-                saveImage(userId)
+                saveImage(userId, result.uri)
             }
         }
     };
+
+
+    function open() {
+        pickerRef.current.focus();
+    }
+
+    function close() {
+        pickerRef.current.blur();
+    }
 
     return (
 
         <View style={styles.container}>
             <View style={{}}>
 
-                <View style={{ marginBottom: 10, marginLeft: 15, marginRight: 10 }}>
+                <View style={{ marginBottom: 5, marginLeft: 15, marginRight: 10 }}>
                     <Text>Enter Beneficiary Name *</Text>
                     <TextInput
                         placeholder="Enter Beneficiary Name"
@@ -114,9 +127,20 @@ export default function BankDetail({ navigation }) {
                         style={{ marginBottom: 5, marginLeft: 5, height: 35, marginTop: 5 }}
                     />
                 </View>
-                <View style={{ marginBottom: 10, marginLeft: 15, marginRight: 10 }}>
+                <View style={{ marginBottom: 20, marginLeft: 15, marginRight: 10 }}>
                     <Text>Select Bank *</Text>
-                    <PickerButton dataItem={banks} ></PickerButton>
+                    {/* <PickerButton dataItem={banks} ></PickerButton> */}
+                    <Picker
+                        style={{ height: 30 }}
+                        ref={pickerRef}
+                        selectedValue={bankName}
+                        onValueChange={(itemValue, itemIndex) =>
+                            setbankName(itemValue)
+                        }>
+                        {
+                            banks.map(i => <Picker.Item  key={i} label={i} value={i} />)
+                        }
+                    </Picker>
                 </View>
                 <View style={{ marginBottom: 10, marginLeft: 15, marginRight: 10 }}>
                     <Text>Enter Current Account Number *</Text>
@@ -161,7 +185,7 @@ export default function BankDetail({ navigation }) {
                     <Button textColor='#274384' icon="radiobox-marked" mode="text">Should be same as above</Button>
                 </View>
                 {chequeImage ?
-                    (<View style={{ marginTop: 5, alignItems:'center'}}>
+                    (<View style={{ marginTop: 5, alignItems: 'center' }}>
                         {/* <Card >
                             <Card.Cover style={{ flexWrap: 'wrap' }}  source={{ uri: chequeImage }} />
                         </Card> */}
@@ -196,7 +220,7 @@ export default function BankDetail({ navigation }) {
 
             </View>
             <View>
-                <Button style={{ marginTop: 10, backgroundColor: '#00A197' }} mode="contained" onPress={i => { navigation.navigate('ThankScreen') }}>Submit</Button>
+                <Button style={{ marginTop: 10, backgroundColor: '#00A197' }} mode="contained" onPress={i => { validate() }}>Submit</Button>
             </View>
         </View>
     );

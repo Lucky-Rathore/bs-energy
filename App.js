@@ -101,8 +101,6 @@ const DetailsScreen = (props) => {
 
       <OTPTextView
         handleTextChange={i => console.log(i)}
-        containerStyle={styles.textInputContainer}
-        textInputStyle={styles.roundedTextInput}
         inputCount={6}
         inputCellLength={1}
         tintColor="#000"

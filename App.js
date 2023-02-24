@@ -2,7 +2,7 @@ import * as React from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { useState, useRef } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
-import { TouchableOpacity } from 'react-native';
+import { Alert, TouchableOpacity } from 'react-native';
 import {
   Card,
   Title,
@@ -14,6 +14,11 @@ import {
 
 import { Picker } from '@react-native-picker/picker';
 
+import Parse from 'parse/react-native.js';
+
+Parse.setAsyncStorage(AsyncStorage);
+Parse.initialize('uvjIKE4Tr18UMo9AK4CwWKreb3tJZQ21cOl8aVgj', 'bwmjSWPIEWEkNi7qFeJYNJYkAf4HaIjBFyIy5hg1');
+Parse.serverURL = 'https://parseapi.back4app.com/'
 
 
 import { Text, Image, View } from 'react-native';
@@ -53,6 +58,19 @@ const DetailsScreen = (props) => {
 
 
   AsyncStorage.setItem(1,2);
+
+  const add = async () => {
+    const busDetail = new Parse.Object('BusinessDetail1');
+    busDetail.set('name', 'parse test');
+    console.log(busDetail.toJSON())
+    try {
+      const result = await busDetail.save();
+      console.log('result.get("objectId"): ' + result)
+      AsyncStorage.setItem('objectId', result['id'])
+    } catch (error) {
+      console.error('Error while creating BusinessDetail1: ', error);
+    }
+  }
 
   const pickImage = async () => {
     // No permissions request is necessary for launching the image library
@@ -105,7 +123,7 @@ const DetailsScreen = (props) => {
         inputCellLength={1}
         tintColor="#000"
       />
-
+      <Button onPress={add} mode='contained' label='add' ></Button>
     </List.Section>
   );
 };

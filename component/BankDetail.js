@@ -22,8 +22,6 @@ export default function BankDetail({ navigation }) {
     const [chequeImage, setChequeImage] = useState(null)
     
     const banks = ["Select Bank", "Allahabad Bank", "Andhra Bank", "Axis Bank", "Bank of Bahrain and Kuwait", "Bank of Baroda - Corporate Banking", "Bank of Baroda - Retail Banking", "Bank of India", "Bank of Maharashtra", "Canara Bank", "Central Bank of India", "City Union Bank", "Corporation Bank", "Deutsche Bank", "Development Credit Bank", "Dhanlaxmi Bank", "Federal Bank", "ICICI Bank", "IDBI Bank", "Indian Bank", "Indian Overseas Bank", "IndusInd Bank", "ING Vysya Bank", "Jammu and Kashmir Bank", "Karnataka Bank Ltd", "Karur Vysya Bank", "Kotak Bank", "Laxmi Vilas Bank", "Oriental Bank of Commerce", "Punjab National Bank - Corporate Banking", "Punjab National Bank - Retail Banking", "Punjab & Sind Bank", "Shamrao Vitthal Co-operative Bank", "South Indian Bank", "State Bank of Bikaner & Jaipur", "State Bank of Hyderabad", "State Bank of India", "State Bank of Mysore", "State Bank of Patiala", "State Bank of Travancore", "Syndicate Bank", "Tamilnad Mercantile Bank Ltd.", "UCO Bank", "Union Bank of India", "United Bank of India", "Vijaya Bank", "Yes Bank Ltd", "Other"]
-    
-    
 
     const pickerRef = useRef();
     
@@ -70,7 +68,7 @@ export default function BankDetail({ navigation }) {
         const query = new Parse.Query('BusinessDetail1');
         try {
             const user = await query.get(userId);
-            console.log('chequeImage', chequeImage)
+            console.log('chequeImage', chequeImage.substring(0,50))
             user.set('checkImage', new Parse.File('img.png', { base64: imageUri }));
             try {
                 const response = await user.save();
@@ -91,14 +89,15 @@ export default function BankDetail({ navigation }) {
                 allowsEditing: true,
                 aspect: [4, 3],
                 quality: 1,
+                base64: true
             });
 
             if (!result.canceled) {
-                await AsyncStorage.setItem('checkImage', result.uri);
-                setChequeImage(result.uri);
+                await AsyncStorage.setItem('checkImage', result.assets[0].uri);
+                setChequeImage(result.assets[0].uri);
                 const userId = await AsyncStorage.getItem('objectId')
                 console.log('userId / object id: ' + userId)
-                saveImage(userId, result.uri)
+                saveImage(userId, result.assets[0].base64)
             }
         }
     };

@@ -26,35 +26,31 @@ const OTPScreen2 = ({ navigation, route }) => {
 
     const validateOtp = async (otp) => {
         if (!(otp && otp.length == 6)) return
-        var myHeaders = new Headers();
-        myHeaders.append("Authorization", "Basic QUM0ZjM3NmU1MTg1MTE1OTRmZTY5Nzg4MGEyNDc4YWRmZjo5YjExOTU2MDBjMzg0NTk2MDczNjIwMmE4ODU5NjZjOA==");
-        myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
-        var urlencoded = new URLSearchParams();
-        urlencoded.append("To", "+91" + phoneNumber);
-        urlencoded.append("Code", otp);
-        console.log('otp', otp)
-        var requestOptions = {
-            method: 'POST',
-            headers: myHeaders,
-            body: urlencoded,
-            redirect: 'follow'
-        };
-        console.log('validating otp')
-        fetch("https://verify.twilio.com/v2/Services/VAc1a9097271a22e709588ebc0b9d0e161/VerificationCheck", requestOptions)
-            .then(response => response.json())
-            .then(result => {
-                console.log('VerificationCheck otp: ', result)
-                console.log(result['status'])
-                if (result['status'] === 'approved') {
+        console.log('validating text')
+        // WARNING: For POST requests, body is set to null by browsers.
+        var data = "To=%2B91" + phoneNumber + "&Code=" + otp;
+        console.log(' validation otp data', data)
+        var xhr = new XMLHttpRequest();
+        xhr.withCredentials = true;
+
+        xhr.addEventListener("readystatechange", function () {
+            if (this.readyState === 4) {
+                console.log(this.responseText);
+                const resp = JSON.parse(this.responseText)
+                console.log('validation resp', resp)
+                if (resp['status'] === 'approved') {
                     console.log('isValidOtp', isValidOtp)
                     setIsValidOtp(true)
                 }
-            })
-            .catch(error => console.log('error', error));
-        // if (otp === '123456') {
-        //     setIsValidOtp(true)
-        //     console.log('otp equals 123456')
-        // }
+            }
+        });
+
+        xhr.open("POST", "https://verify.twilio.com/v2/Services/VAc1a9097271a22e709588ebc0b9d0e161/VerificationCheck");
+        xhr.setRequestHeader("Authorization", "Basic QUM0ZjM3NmU1MTg1MTE1OTRmZTY5Nzg4MGEyNDc4YWRmZjo5YjExOTU2MDBjMzg0NTk2MDczNjIwMmE4ODU5NjZjOA==");
+        xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+
+        xhr.send(data);
+
     }
 
     const submit = () => {
@@ -63,23 +59,23 @@ const OTPScreen2 = ({ navigation, route }) => {
     };
 
     async function sendOtp() {
-        var myHeaders = new Headers();
-        myHeaders.append("Authorization", "Basic QUM0ZjM3NmU1MTg1MTE1OTRmZTY5Nzg4MGEyNDc4YWRmZjo5YjExOTU2MDBjMzg0NTk2MDczNjIwMmE4ODU5NjZjOA==");
-        myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
-        var urlencoded = new URLSearchParams();
-        urlencoded.append("To", '+91' + phoneNumber);
-        urlencoded.append("Channel", "sms");
-        var requestOptions = {
-            method: 'POST',
-            headers: myHeaders,
-            body: urlencoded,
-            redirect: 'follow'
-        };
+        console.log('resend otp called')
+        var data = "To=%2B91" + phoneNumber + "&Channel=sms";
 
-        fetch("https://verify.twilio.com/v2/Services/VAc1a9097271a22e709588ebc0b9d0e161/Verifications", requestOptions)
-          .then(response => response.text())
-          .then(result => console.log(result))
-          .catch(error => console.log('error', error));
+        var xhr = new XMLHttpRequest();
+        xhr.withCredentials = true;
+
+        xhr.addEventListener("readystatechange", function () {
+            if (this.readyState === 4) {
+                console.log(this.responseText);
+            }
+        });
+
+        xhr.open("POST", "https://verify.twilio.com/v2/Services/VAc1a9097271a22e709588ebc0b9d0e161/Verifications");
+        xhr.setRequestHeader("Authorization", "Basic QUM0ZjM3NmU1MTg1MTE1OTRmZTY5Nzg4MGEyNDc4YWRmZjo5YjExOTU2MDBjMzg0NTk2MDczNjIwMmE4ODU5NjZjOA==");
+        xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+
+        xhr.send(data);
     }
 
     return (
@@ -150,7 +146,7 @@ const OTPScreen2 = ({ navigation, route }) => {
                             "color": "#486484",
                             fontWeight: 'bold'
                         }}
-                        onPress={i => sentOtp()}
+                        onPress={i => sendOtp()}
                     > Resend Code.
                     </Text>
                 </Text>

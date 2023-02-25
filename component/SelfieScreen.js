@@ -42,13 +42,14 @@ const SelfieScreen = ({ route, navigation }) => {
                 allowsEditing: true,
                 aspect: [4, 3],
                 quality: 1,
+                base64: true
             });
             if (!result.cancelled) {
-                if (toCapture == selfieKey) setSelfie(result.uri);
-                else setPropertyImage(result.uri)
+                if (toCapture == selfieKey) setSelfie(result.base64);
+                else setPropertyImage(result.base64)
                 const userId = await AsyncStorage.getItem('objectId')
-                AsyncStorage.setItem(JSON.stringify(toCapture), result.uri);
-                saveImage(userId, result.uri)
+                AsyncStorage.setItem(JSON.stringify(toCapture), result.base64);
+                saveImage(userId, result.base64)
             }
         }
 

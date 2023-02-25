@@ -174,8 +174,6 @@ export default function KycForm({ navigation, route }) {
             }}>Upload GST</Button>
           </View>
           <TextInput style={{ marginLeft: 15, height: 40 }} onChangeText={i => setGst(i)} placeholder="AXTBZ8777R" ></TextInput>
-
-
         </View>
       </View>
       <View >

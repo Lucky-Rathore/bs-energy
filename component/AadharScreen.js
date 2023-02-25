@@ -55,13 +55,14 @@ const AadharScreen = ({ route, navigation }) => {
                 allowsEditing: true,
                 aspect: [4, 3],
                 quality: 1,
+                base64: true
             });
             if (!result.cancelled) {
-                await AsyncStorage.setItem(backImage ? 'aadharImageBack' : 'aadharImage', result.uri);
+                await AsyncStorage.setItem(backImage ? 'aadharImageBack' : 'aadharImage', result.assets[0].uri);
                 const userId = await AsyncStorage.getItem('objectId')
                 console.log('userId / object id: ' + userId)
-                saveImage(backImage ? 'aadharImageBack' : 'aadharImage', userId, result.uri)
-                backImage ? setImageBack(result.uri) : setImage(result.uri)
+                saveImage(backImage ? 'aadharImageBack' : 'aadharImage', userId, result.assets[0].base64)
+                backImage ? setImageBack(result.assets[0].base64) : setImage(result.assets[0].base64)
             }
         }
 

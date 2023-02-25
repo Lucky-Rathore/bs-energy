@@ -48,13 +48,14 @@ const KycScreen = ({ route, navigation }) => {
                 allowsEditing: true,
                 aspect: [4, 3],
                 quality: 1,
+                base64: true
             });
-            if (!result.cancelled) {
-                await AsyncStorage.setItem(heading, result.uri);
+            if (!result.canceled) {
+                await AsyncStorage.setItem(heading, result.assets[0].uri);
                 const userId = await AsyncStorage.getItem('objectId')
                 console.log('userId / object id: ' + userId)
-                saveImage(userId, result.uri)
-                setImage(result.uri);
+                saveImage(userId, result.assets[0].base64)
+                setImage(result.assets[0].uri);
             }
         }
     };

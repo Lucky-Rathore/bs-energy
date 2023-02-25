@@ -3,7 +3,7 @@ import { MD3LightTheme as DefaultTheme, Provider as PaperProvider } from 'react-
 import { TextInput, Text } from 'react-native-paper';
 import { Button } from 'react-native-paper';
 
-import { Alert, StyleSheet } from 'react-native';
+import { Alert, StyleSheet, TextInput as NativeTextInput } from 'react-native';
 
 import Parse from 'parse/react-native.js';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -39,29 +39,28 @@ export default function UserForm({ navigation }) {
 
 
   async function sendOtp() {
-    var myHeaders = new Headers();
-    myHeaders.append("Authorization", "Basic QUM0ZjM3NmU1MTg1MTE1OTRmZTY5Nzg4MGEyNDc4YWRmZjo5YjExOTU2MDBjMzg0NTk2MDczNjIwMmE4ODU5NjZjOA==");
-    myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
+    console.log('send otp called')
+    var data = "To=%2B91"+ phone + "&Channel=sms";
 
-    var urlencoded = new URLSearchParams();
-    urlencoded.append("To", '+91' + phone);
-    urlencoded.append("Channel", "sms");
-    console.log(phone)
-    var requestOptions = {
-      method: 'POST',
-      headers: myHeaders,
-      body: urlencoded,
-      redirect: 'follow'
-    };
+    var xhr = new XMLHttpRequest();
+    xhr.withCredentials = true;
 
-    fetch("https://verify.twilio.com/v2/Services/VAc1a9097271a22e709588ebc0b9d0e161/Verifications", requestOptions)
-      .then(response => response.text())
-      .then(result => console.log(result))
-      .catch(error => console.log('error', error));
+    xhr.addEventListener("readystatechange", function () {
+      if (this.readyState === 4) {
+        console.log(this.responseText);
+      }
+    });
+
+    xhr.open("POST", "https://verify.twilio.com/v2/Services/VAc1a9097271a22e709588ebc0b9d0e161/Verifications");
+    xhr.setRequestHeader("Authorization", "Basic QUM0ZjM3NmU1MTg1MTE1OTRmZTY5Nzg4MGEyNDc4YWRmZjo5YjExOTU2MDBjMzg0NTk2MDczNjIwMmE4ODU5NjZjOA==");
+    xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+
+    xhr.send(data);
   }
 
   async function validate() {
     let s = ''
+    console.log('validating user form ')
     if (name.length < 1) s += '\n- Name'
     if (busName.length < 1) s += '\n - Business Name'
     if (!(parseInt(phone) >= 1000000000 && parseInt(phone) <= 9999999999)) s += '\n - Phone Number'
@@ -76,7 +75,7 @@ export default function UserForm({ navigation }) {
       add()
     }
     else {
-      console.log('s: ' + s)
+      sendOtp
       alert('Please enter valid value for: ' + s)
     }
   }
@@ -106,7 +105,7 @@ export default function UserForm({ navigation }) {
 
   return (
     <View style={styles.container}>
-      <View style={{ justifyContent: 'center', marginHorizontal: 20, flexWrap: 'wrap' }}>
+      <View style={{ justifyContent: 'center', marginHorizontal: 20 }}>
 
         <View style={{ marginBottom: 10 }}>
           <Text>Full Name*</Text>
@@ -138,6 +137,7 @@ export default function UserForm({ navigation }) {
             value={phone}
             onChangeText={t => setPhone(t)}
             mode='flat'
+            keyboardType="numeric"
             style={{ marginBottom: 5, marginLeft: 5, height: 35, marginTop: 5 }}
           />
         </View>
@@ -149,6 +149,7 @@ export default function UserForm({ navigation }) {
             value={email}
             onChangeText={t => setEmail(t)}
             mode='flat'
+            keyboardType="email"
             style={{ marginBottom: 5, marginLeft: 5, height: 35, marginTop: 5 }}
           />
         </View>
@@ -193,6 +194,7 @@ export default function UserForm({ navigation }) {
             value={pin}
             onChangeText={t => setPin(t)}
             mode='flat'
+            keyboardType="numeric"
             style={{ marginBottom: 5, marginLeft: 5, height: 35, marginTop: 5 }}
           />
         </View>

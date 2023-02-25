@@ -36,7 +36,8 @@ const SelfieScreen2 = ({ route, navigation }) => {
         const query = new Parse.Query('BusinessDetail1');
         try {
             const user = await query.get(userId);
-            user.set(imageKey, new Parse.File('img.png', { base64: image }));
+            // console.log('image', image)
+            user.set(imageKey, new Parse.File('img.jpeg', { base64: image }));
             try {
                 const response = await user.save();
                 console.log('BusinessDetail1 updated', response);
@@ -56,13 +57,16 @@ const SelfieScreen2 = ({ route, navigation }) => {
                 allowsEditing: true,
                 aspect: [4, 3],
                 quality: 1,
+                base64: true
             });
-            if (!result.cancelled) {
-                await AsyncStorage.setItem(backImage ? 'propertyImage' : 'selfieImage', result.uri);
+            if (!result.canceled) {
+                console.log(' result.assets[0].uri', result.assets[0].uri )
+                console.log(' result.assets[0].base64', result.assets[0].base64.substring(0,50))
+                await AsyncStorage.setItem(backImage ? 'propertyImage' : 'selfieImage', result.assets[0].uri);
                 const userId = await AsyncStorage.getItem('objectId')
                 console.log('userId / object id: ' + userId)
-                saveImage(backImage ? 'propertyImage' : 'selfieImage', userId, result.uri)
-                backImage ? setImageBack(result.uri) : setImage(result.uri)
+                saveImage(backImage ? 'propertyImage' : 'selfieImage', userId, result.assets[0].base64)
+                backImage ? setImageBack(result.assets[0].uri) : setImage(result.assets[0].uri)
             }
         }
 

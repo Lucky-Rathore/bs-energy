@@ -5,6 +5,8 @@ import { View, StyleSheet } from 'react-native';
 import Parse from 'parse/react-native.js';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+
 
 
 
@@ -76,111 +78,118 @@ export default function KycForm({ navigation, route }) {
 
 
   return (
-    <View style={styles.container}>
 
-      <View>
-        <Button
-          textColor='#274384'
-          style={[{ alignSelf: 'flex-start' }]}
-          icon="camera"
-          mode="text"
-          labelStyle={{ fontSize: 16, "fontWeight": "bold", }}
-          onPress={() => navigation.navigate('SelfieScreen2', { isProperty: false })}>
-          Selfie*
-        </Button>
-        <Button
-          labelStyle={{ fontSize: 16, "fontWeight": "bold", }}
-          textColor='#274384'
-          style={{ alignSelf: 'flex-start' }}
-          icon="camera"
-          mode="text"
-          onPress={() => navigation.navigate('SelfieScreen2', { isProperty: true })}>
-          Business Site Photo*
-        </Button>
+    <KeyboardAwareScrollView>
 
+      <View style={styles.container}>
+
+        <View>
+          <Button
+            textColor='#274384'
+            style={[{ alignSelf: 'flex-start' }]}
+            icon="camera"
+            mode="text"
+            labelStyle={{ fontSize: 16, "fontWeight": "bold", }}
+            onPress={() => navigation.navigate('SelfieScreen2', { isProperty: false })}>
+            Selfie*
+          </Button>
+          <Button
+            labelStyle={{ fontSize: 16, "fontWeight": "bold", }}
+            textColor='#274384'
+            style={{ alignSelf: 'flex-start' }}
+            icon="camera"
+            mode="text"
+            onPress={() => navigation.navigate('SelfieScreen2', { isProperty: true })}>
+            Business Site Photo*
+          </Button>
+
+          <View >
+            <Button
+              textColor='#274384'
+              mode='text'
+              style={{ alignSelf: 'flex-start', marginTop: 10, color: 'black' }}
+              labelStyle={{ fontSize: 16, "fontWeight": "bold" }}
+              icon="file-document-outline">
+              PAN (Personal)
+            </Button>
+            <View style={{ flexDirection: 'row' }} >
+              <Button textColor='#274384' style={{ fontWeight: 'bold' }} icon="radiobox-marked" mode="text">PAN Number</Button>
+              <Button textColor='#274384' icon="radiobox-blank" style={{ marginLeft: 40 }} mode="text" onPress={() => {
+                navigation.navigate('KycScreen', {
+                  heading: 'Pan (Personal)',
+                  imageKey: 'panImage'
+                });
+              }}>Upload PAN</Button>
+            </View>
+            <TextInput style={{ marginLeft: 15, height: 40 }} onChangeText={i => setPan(i)} placeholder="AXTBZ8777R" ></TextInput>
+
+            <Button
+              textColor='#274384'
+              mode='text'
+              style={{ alignSelf: 'flex-start', marginTop: 10, color: 'black' }}
+              labelStyle={{ fontSize: 16, "fontWeight": "bold" }}
+              icon="file-document-outline">
+              Addhar Card*
+            </Button>
+            <View style={{ flexDirection: 'row' }} >
+              <Button textColor='#274384' icon="radiobox-marked" style={{ fontWeight: 'bold' }} mode="text">Aadhar Number</Button>
+              <Button textColor='#274384' icon="radiobox-blank" style={{ marginLeft: 25 }} mode="text" onPress={() => {
+                navigation.navigate('AadharScreen', {
+                  heading: 'Aadhar Number',
+                  imageKey: 'aadharImage'
+                });
+              }}>Upload Aadhar</Button>
+            </View>
+            <TextInput style={{ marginLeft: 15, height: 40 }} onChangeText={i => setAadhar(i)} placeholder="1234 1234 1234 1234" ></TextInput>
+
+            <Button
+              textColor='#274384'
+              mode='text'
+              style={{ alignSelf: 'flex-start', marginTop: 10, color: 'black' }}
+              labelStyle={{ fontSize: 16, "fontWeight": "bold" }}
+              icon="file-document-outline">
+              PAN (Business)
+            </Button>
+            <View style={{ flexDirection: 'row' }} >
+              <Button textColor='#274384' icon="radiobox-marked" style={{ fontWeight: 'bold' }} mode="text">PAN Number</Button>
+              <Button textColor='#274384' icon="radiobox-blank" style={{ marginLeft: 40 }} mode="text" onPress={() => {
+                navigation.navigate('KycScreen', {
+                  heading: 'Pan Business',
+                  imageKey: 'bizAadharImage'
+                });
+              }}>Upload PAN</Button>
+            </View>
+            <TextInput style={{ marginLeft: 15, height: 40 }} onChangeText={i => setBizPan(i)} placeholder="AQZPA3587H" ></TextInput>
+
+            <Button
+              textColor='#274384'
+              mode='text'
+              style={{ alignSelf: 'flex-start', marginTop: 10, color: 'black' }}
+              labelStyle={{ fontSize: 16, "fontWeight": "bold" }}
+              icon="file-document-outline">
+              GST Certificate
+            </Button>
+            <View style={{ flexDirection: 'row' }} >
+              <Button textColor='#274384' icon="radiobox-marked" style={{ fontWeight: 'bold' }} mode="text">GST Number</Button>
+              <Button textColor='#274384' icon="radiobox-blank" style={{ marginLeft: 40 }} mode="text" onPress={() => {
+                navigation.navigate('KycScreen', {
+                  heading: 'GST Certificate',
+                  imageKey: 'gstImage'
+                });
+              }}>Upload GST</Button>
+            </View>
+            <TextInput style={{ marginLeft: 15, height: 40 }} onChangeText={i => setGst(i)} placeholder="AXTBZ8777R" ></TextInput>
+          </View>
+        </View>
         <View >
-          <Button
-            textColor='#274384'
-            mode='text'
-            style={{ alignSelf: 'flex-start', marginTop: 10, color: 'black' }}
-            labelStyle={{ fontSize: 16, "fontWeight": "bold" }}
-            icon="file-document-outline">
-            PAN (Personal)
-          </Button>
-          <View style={{ flexDirection: 'row' }} >
-            <Button textColor='#274384' style={{ fontWeight: 'bold' }} icon="radiobox-marked" mode="text">PAN Number</Button>
-            <Button textColor='#274384' icon="radiobox-blank" style={{ marginLeft: 40 }} mode="text" onPress={() => {
-              navigation.navigate('KycScreen', {
-                heading: 'Pan (Personal)',
-                imageKey: 'panImage'
-              });
-            }}>Upload PAN</Button>
-          </View>
-          <TextInput style={{ marginLeft: 15, height: 40 }} onChangeText={i => setPan(i)} placeholder="AXTBZ8777R" ></TextInput>
-
-          <Button
-            textColor='#274384'
-            mode='text'
-            style={{ alignSelf: 'flex-start', marginTop: 10, color: 'black' }}
-            labelStyle={{ fontSize: 16, "fontWeight": "bold" }}
-            icon="file-document-outline">
-            Addhar Card*
-          </Button>
-          <View style={{ flexDirection: 'row' }} >
-            <Button textColor='#274384' icon="radiobox-marked" style={{ fontWeight: 'bold' }} mode="text">Aadhar Number</Button>
-            <Button textColor='#274384' icon="radiobox-blank" style={{ marginLeft: 25 }} mode="text" onPress={() => {
-              navigation.navigate('AadharScreen', {
-                heading: 'Aadhar Number',
-                imageKey: 'aadharImage'
-              });
-            }}>Upload Aadhar</Button>
-          </View>
-          <TextInput style={{ marginLeft: 15, height: 40 }} onChangeText={i => setAadhar(i)} placeholder="1234 1234 1234 1234" ></TextInput>
-
-          <Button
-            textColor='#274384'
-            mode='text'
-            style={{ alignSelf: 'flex-start', marginTop: 10, color: 'black' }}
-            labelStyle={{ fontSize: 16, "fontWeight": "bold" }}
-            icon="file-document-outline">
-            PAN (Business)
-          </Button>
-          <View style={{ flexDirection: 'row' }} >
-            <Button textColor='#274384' icon="radiobox-marked" style={{ fontWeight: 'bold' }} mode="text">PAN Number</Button>
-            <Button textColor='#274384' icon="radiobox-blank" style={{ marginLeft: 40 }} mode="text" onPress={() => {
-              navigation.navigate('KycScreen', {
-                heading: 'Pan Business',
-                imageKey: 'bizAadharImage'
-              });
-            }}>Upload PAN</Button>
-          </View>
-          <TextInput style={{ marginLeft: 15, height: 40 }} onChangeText={i => setBizPan(i)} placeholder="AQZPA3587H" ></TextInput>
-
-          <Button
-            textColor='#274384'
-            mode='text'
-            style={{ alignSelf: 'flex-start', marginTop: 10, color: 'black' }}
-            labelStyle={{ fontSize: 16, "fontWeight": "bold" }}
-            icon="file-document-outline">
-            GST Certificate
-          </Button>
-          <View style={{ flexDirection: 'row' }} >
-            <Button textColor='#274384' icon="radiobox-marked" style={{ fontWeight: 'bold' }} mode="text">GST Number</Button>
-            <Button textColor='#274384' icon="radiobox-blank" style={{ marginLeft: 40 }} mode="text" onPress={() => {
-              navigation.navigate('KycScreen', {
-                heading: 'GST Certificate',
-                imageKey: 'gstImage'
-              });
-            }}>Upload GST</Button>
-          </View>
-          <TextInput style={{ marginLeft: 15, height: 40 }} onChangeText={i => setGst(i)} placeholder="AXTBZ8777R" ></TextInput>
+          <Button style={{ backgroundColor: '#00A197', marginTop: 10 }} mode="contained" onPress={validate}>Continue</Button>
+          <Button icon='lock' style={styles.text01}>Your Information is safe with us.</Button>
         </View>
       </View>
-      <View >
-        <Button style={{ backgroundColor: '#00A197', marginTop: 10 }} mode="contained" onPress={validate}>Continue</Button>
-        <Button icon='lock' style={styles.text01}>Your Information is safe with us.</Button>
-      </View>
-    </View>
+
+    </KeyboardAwareScrollView>
+
+
   );
 }
 

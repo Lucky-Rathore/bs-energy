@@ -7,24 +7,25 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import Parse from 'parse/react-native.js';
 import { Picker } from '@react-native-picker/picker'
 
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
 Parse.setAsyncStorage(AsyncStorage);
 Parse.initialize('uvjIKE4Tr18UMo9AK4CwWKreb3tJZQ21cOl8aVgj', 'bwmjSWPIEWEkNi7qFeJYNJYkAf4HaIjBFyIy5hg1');
 Parse.serverURL = 'https://parseapi.back4app.com/'
 
 export default function BankDetail({ navigation }) {
-    
+
     const [beneficiaryName, setbeneficiaryName] = useState(null)
     const [bankName, setbankName] = useState(null)
     const [bankAccNumber, setbankAccNumber] = useState('')
     const [bankAccNumber2, setbankAccNumber2] = useState('')
     const [ifscCode, setifscCode] = useState(null)
     const [chequeImage, setChequeImage] = useState(null)
-    
+
     const banks = ["Select Bank", "Allahabad Bank", "Andhra Bank", "Axis Bank", "Bank of Bahrain and Kuwait", "Bank of Baroda - Corporate Banking", "Bank of Baroda - Retail Banking", "Bank of India", "Bank of Maharashtra", "Canara Bank", "Central Bank of India", "City Union Bank", "Corporation Bank", "Deutsche Bank", "Development Credit Bank", "Dhanlaxmi Bank", "Federal Bank", "ICICI Bank", "IDBI Bank", "Indian Bank", "Indian Overseas Bank", "IndusInd Bank", "ING Vysya Bank", "Jammu and Kashmir Bank", "Karnataka Bank Ltd", "Karur Vysya Bank", "Kotak Bank", "Laxmi Vilas Bank", "Oriental Bank of Commerce", "Punjab National Bank - Corporate Banking", "Punjab National Bank - Retail Banking", "Punjab & Sind Bank", "Shamrao Vitthal Co-operative Bank", "South Indian Bank", "State Bank of Bikaner & Jaipur", "State Bank of Hyderabad", "State Bank of India", "State Bank of Mysore", "State Bank of Patiala", "State Bank of Travancore", "Syndicate Bank", "Tamilnad Mercantile Bank Ltd.", "UCO Bank", "Union Bank of India", "United Bank of India", "Vijaya Bank", "Yes Bank Ltd", "Other"]
 
     const pickerRef = useRef();
-    
+
     AsyncStorage.getItem('checkImage').then(i => {
         if (i) { setChequeImage(i); }
     });
@@ -68,7 +69,7 @@ export default function BankDetail({ navigation }) {
         const query = new Parse.Query('BusinessDetail1');
         try {
             const user = await query.get(userId);
-            console.log('chequeImage', chequeImage.substring(0,50))
+            console.log('chequeImage', chequeImage.substring(0, 50))
             user.set('checkImage', new Parse.File('img.png', { base64: imageUri }));
             try {
                 const response = await user.save();
@@ -112,8 +113,7 @@ export default function BankDetail({ navigation }) {
     }
 
     return (
-
-        <View style={styles.container}>
+        <KeyboardAwareScrollView><View style={styles.container}>
             <View style={{}}>
 
                 <View style={{ marginBottom: 5, marginLeft: 15, marginRight: 10 }}>
@@ -137,7 +137,7 @@ export default function BankDetail({ navigation }) {
                             setbankName(itemValue)
                         }>
                         {
-                            banks.map(i => <Picker.Item  key={i} label={i} value={i} />)
+                            banks.map(i => <Picker.Item key={i} label={i} value={i} />)
                         }
                     </Picker>
                 </View>
@@ -221,7 +221,8 @@ export default function BankDetail({ navigation }) {
             <View>
                 <Button style={{ marginTop: 10, backgroundColor: '#00A197' }} mode="contained" onPress={i => { validate() }}>Submit</Button>
             </View>
-        </View>
+        </View></KeyboardAwareScrollView>
+
     );
 }
 

@@ -76,12 +76,12 @@ const AadharScreen = ({ route, navigation }) => {
                 <Button
                     textColor='#274384'
                     mode='text'
-                    style={{ alignSelf: 'flex-start', marginTop: 20, color: 'black' }}
+                    style={{ alignSelf: 'flex-start', color: 'black' }}
                     labelStyle={{ fontSize: 16, "fontWeight": "bold" }}
                     icon="file-document-outline">
                     Aadhar Image
                 </Button>
-                <View style={{ marginTop: 30, flexDirection: 'row', justifyContent: 'space-around' }} >
+                <View style={{  flexDirection: 'row', justifyContent: 'space-around' }} >
                     <Button textColor='#274384' icon="radiobox-blank" mode="text">Aadhar Number</Button>
                     <Button textColor='#274384' style={{fontWeight: 'bold'}} icon="radiobox-marked" mode="text">Upload Image</Button>
                 </View>
@@ -91,15 +91,15 @@ const AadharScreen = ({ route, navigation }) => {
                     "fontSize": 16,
                     // "lineHeight": 24,
                     "color": "#6E717C",
-                    marginTop: 10
+                    marginTop: 5
                 }}>Aadhar Card Front *</Text>
                 {image ?
-                    (<View style={{ marginTop: 30 }}>
+                    (<View style={{ marginTop: 10 }}>
 
                         <Card>
                             <Card.Cover source={{ uri: image }} />
                         </Card>
-                        <View style={{ marginTop: 30, alignItems: 'center' }} >
+                        <View style={{ marginTop: 10, alignItems: 'center' }} >
                             <Text onPress={i => pickImage()} style={{ color: '#274384', fontWeight: 'bold' }} >Click here to upload Again</Text>
 
                         </View>
@@ -123,7 +123,7 @@ const AadharScreen = ({ route, navigation }) => {
                         </View>
                     </View>)}
 
-                <View style={{ marginTop: 30 }}>
+                <View style={{ marginTop: 10 }}>
                     <Text style={{
                         "fontStyle": "normal",
                         "fontWeight": "400",
@@ -132,12 +132,12 @@ const AadharScreen = ({ route, navigation }) => {
                     }}>Aadhar Card Back *</Text>
                 </View>
                 {imageBack ?
-                    (<View style={{ marginTop: 30 }}>
+                    (<View style={{ marginTop: 10 }}>
 
                         <Card>
                             <Card.Cover source={{ uri: imageBack }} />
                         </Card>
-                        <View style={{ marginTop: 30, alignItems: 'center' }} >
+                        <View style={{ marginTop: 10, alignItems: 'center' }} >
                             <Text onPress={i => pickImage(true)} style={{ color: '#274384', fontWeight: 'bold' }} >Click here to upload Again</Text>
                         </View>
                     </View>)
@@ -159,7 +159,7 @@ const AadharScreen = ({ route, navigation }) => {
 
                         </View>
                     </View>)}
-                <Button style={{ marginTop: 50, backgroundColor: '#00A197' }} mode="contained" onPress={() => navigation.navigate("KycForm")}>Proceed</Button>
+                <Button style={{ marginTop: 10, backgroundColor: '#00A197' }} mode="contained" onPress={() => navigation.navigate("KycForm")}>Proceed</Button>
                 <Button icon='lock' style={styles.text01}>Your Information is safe with us.</Button>
             </View>
         </View>
@@ -173,7 +173,7 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         alignItems: 'center',
-        marginTop: 30
+        marginTop: 10
     },
     box: {
         backgroundColor: '#ffffff',

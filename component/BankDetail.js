@@ -34,7 +34,7 @@ export default function BankDetail({ navigation }) {
         let s = ''
         if (!(beneficiaryName && beneficiaryName.length > 0)) s += '\n- Benificiary Name'
         if (!(bankAccNumber && bankAccNumber.length > 0)) s += '\n- Bank Number'
-        if (!(bankAccNumber2 && bankAccNumber2.length > 0 && bankAccNumber2 === bankAccNumber)) alert('bank account numbers are not same.')
+        if (!(bankAccNumber2 && bankAccNumber2.length > 0 && bankAccNumber2 === bankAccNumber)) s += '\n- Bank Number'
         if (!(ifscCode && ifscCode.length > 0)) s += '\n- IFSC Code'
         if (!chequeImage) s += '\n- Cheque Image'
         if (!(bankName && bankName.length > 0)) s += '\n- Bank'

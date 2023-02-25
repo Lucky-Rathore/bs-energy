@@ -44,7 +44,7 @@ export default function Main() {
     <PaperProvider theme={theme}  >
       <NavigationContainer theme={theme}>
         <Stack.Navigator
-          initialRouteName="KycForm"
+          initialRouteName="UserForm"
           screenOptions={{
             header: (props) => <CustomNavigationBar {...props} />,
           }}>
